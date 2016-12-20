@@ -1,0 +1,125 @@
+.incrctrl
+{
+	border-collapse: collapse;
+
+}
+
+.incrctrl
+{
+	line-height: 10px
+
+}
+
+.grn { color: #003300 }
+.red { color: #990000 }
+
+img
+{
+	border: none;
+	margin: 0;
+	padding:  0;
+}
+
+.qty
+{
+	text-align: right;
+	padding-right: 3px;
+}
+
+tr.even { background: #dddddd; color: #000000 }
+tr.odd { background: #ffffff; color: #000000 }
+
+tr.highlight { background-color: #0099ff; color: #ffffff }
+
+.ui-autocomplete { height: 100px; overflow-y: scroll; overflow-x: hidden;}
+
+#customer_dialog, #recv_payment_screen, #billing_dialog, #service_charge_dialog, #cart_item_description_dialog, #cash_refund_dialog {
+
+	top: 20%;
+	left: 5%;
+	position: absolute;
+	display: none;
+	-moz-border-radius: 6px;
+	border: 1px solid #000000;
+	background: #cccccc;
+	width: 75%;
+	font-size:  100%;
+	padding-left: 10px;
+	border-radius: 6px;
+	padding-bottom: 10px;
+
+}
+
+#auth_dialog {
+	top: 20%;
+	left: 25%;
+	position: absolute;
+	display: none;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	border: 1px solid #000000;
+	background: #cccccc;
+	width: 300px;
+	/*height: 75px;*/
+	font-size: 90%;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	z-index: 1000000000;
+
+}
+
+#catalog_dialog {
+	top: 10%;
+	/*left: 25%;*/
+	width: 90%;
+	position: absolute;
+	display: none;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	border: 1px solid #000000;
+	background: #cccccc;
+	font-size: 90%;
+	padding-left: 10px;
+
+	padding-bottom: 10px;
+
+}
+
+#customer_bill_dialog {
+
+	top: 15px;
+	left: 12%;
+	position: absolute;
+	display: none;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	border: 1px solid #000000;
+	background: #cccccc;
+	width: 870px;
+	/*height: 755px; */
+	height: 95%;
+	font-size: 90%;
+	padding-left: 10px;
+
+}
+
+#billing_container td { padding: 4px }
+#billing_container th { font-weight: normal; text-align: right; padding-right: 100px }
+#customer_tickets_container td { padding: 5px;} /* 684px width */
+
+input[type=checkbox] { width: 17px; height: 17px }
+input[type=radio] { width: 17px; height: 17px }
+input[type=text], input[type=password] { padding: 3px }
+select { padding: 3px }
+button { padding: 4px }
+option { padding: 3px }
+
+.posbody { overflow-y: no-display; margin-top: 15px; background: #dddddd; font-family: sans-serif; width: 1000px }
+
+input[type=checkbox] {
+      /* All browsers except webkit*/
+      transform: scale(2);
+
+      /* Webkit browsers*/
+      -webkit-transform: scale(2);
+    }

@@ -1,0 +1,192 @@
+Release notes for 1.3.2
+
+Version 1.3.2  12/19/16
+
+-Statements (print_satement.php) were showing returns that were payment type of 'check' which it should have ignored
+
+
+Version 1.3.1  7/9/14
+
+-Added right-click description to attach text info to cart items
+-Fixed aging report counting voids and cash/cc/check sales
+-Fixed the clock which was showing no months after September
+-Improved the "received by" button to save immediately, since it was not retained if pausing the transaction
+-Fixed the "received by" button
+-Added 'cash refund' to context menu on billing page to issue refunds for accounts with positive balances
+-Fixed closing report over/short amount double counting checks and cash
+-Added loading indicators to the customer's bill listing dialog
+-Fixed wrong ticket ID in the prompt when voiding
+
+Version 1.2.2 10/28/2012
+-Changed payment (on account) to include time of day instead of just defaulting to midnight of the date given
+-Added 'received by' field to tickets.  This does not save if you pause the transaction.  Must be entered prior to finalizing
+ it.  This prints out on the invoice only but can be viewed on the billing screen
+-fixed balance forward on statements not using the correct display date
+-fixed void not updating catalog quantities
+
+Version 1.2.1 8/8/2012
+-fixed CR appearing before balance when it was a zero sum of credits and debts
+-added printing to the aging report and began moving print functionality into $pos class
+-set label printer setting to off in config file since that causes problems finalizing a transaction if 
+ not available
+
+Version 1.2.0 7/28/2012
+-added bulk printing of invoices and setting whether or not to print a customer's invoice in the billing page
+-optimized invoice printing so tickets are appended to the statement when run through htmldoc
+-added a new batch file for printing the tickets in a smaller font, and added a path to it in the config file
+-fixed save payment was saving the date of the current day instead of the date given
+-discounts now added to the service charge dialog (by context menu in billing)
+-added confirm of ticket # on void
+-reversed amount/check # on payment dialog
+-added viewing of statement from billing page
+-invoice start date was not being used and calculation now strictly uses start - end for calculating 
+ and displaying the invoice
+-added job names to the statement next to ticket number
+-fixed the display of customer balance in the payment screen
+-added check number to the receipt and invoices
+-fixed voids showing up on tickets and being counted in 'balance forward'
+ and non charge transactions showing up on statements
+-made refund switch update refund status so the status isn't lost if pausing the transaction and 
+ added a more visible refund indicator on the main screen
+-added a weekly report to print out charge transactions, under the closing dialog
+-changed receipt to grouping items rather than listing duplicate items individually
+-fixed searching by ticket number to now show right click context menu on results
+-fixed 2nd address line not showing on statement
+
+Version 1.1.3 4/1/2012
+-fixed focus problem of open transactions
+-added date display
+-fixed shipping and freight charges disappearing after selecting a customer
+-added display of customer's balance when initiating a payment
+
+Version 1.1.2 beta 2/16/2012
+-refunds weren't being indicated when searching a ticket
+-added address line 2 to customer info:   ALTER TABLE CUSTOMERS ADD COLUMN address2 char(100) AFTER address;
+-fixed customer dialog to prevent editing to the noname account and set 'active' checked by default when adding a new customer
+-choosing customer was causing problems by not stripping the comma out of the subtotal when updating the totals
+-found an instance of the sales tax being hard-coded and fixed it
+
+
+Version 1.1.1 beta 2/04/2012
+-checked that last_name or company is not blank when saving customer info.  Set the editing customer id to '' in several
+ places to be sure it can't linger.  Removed  the focus of the customer when re-opening the customer dialog or on adding 
+ a new customer, since it was recently changed to clear the customer info from the form on re-open, but the customer 
+ selected was not
+-freight charge was not showing up in the printed statement
+-changed statement to include payments and returns occuring after the designated end-date
+-fixed printing of statements should be printing tickets from the billing period too
+-fixed job name not showing on invoice
+-limited search of ticket id to given customer since the customer's name was still in the top of the dialog 
+ when loading a ticket
+-fixed important transaction variables being reset when hitting cancel button
+-fixed tax exempt status being ignored when adding discount/freight
+-added labor total under special options.  Run docs/upgrade-1.1.1.sql to update the database if you are upgrading from v 1.1.0
+-mysql_install.sql install script was missing changes to ticket table made in version 1.1 and now brought up to date
+-added subtotal, labor, freight, and tax to the bottom of transactions when viewing tickets from the billing dialog
+-improved auto-decimal behavior
+-added labor, discount, freight to the receipts
+
+Version 1.1 beta 1/15/2012
+
+
+-changed catalog barcode column and added a display-id column so to allow it to be easily changed.  Run docs/upgrade-1.1.sql 
+if you are upgrading from 1.0.x
+-fixed bugs in receipt printing and put some printing options in options.cfg.php
+-added warning when adding zero-value items to the cart
+-allowed turning off the label printer in the configuration options
+-fixed scripting error trying to modify the disabled property of the cancel_pay_button
+-new option in the config file for adding the decimal place automatically to prices
+-void payment type was not being excluded from closing journal print
+-added switch for printing receipt when finalizing transaction
+-opening balance report printing
+-improved setup instructions
+-fixed problem with journal input not being treated as a number
+-fixed problems where first-name/last-name were displayed instead of company
+-added sorting to the billing dialog transactions
+-fixed problems with parsing transaction variables as floats
+
+Version 1.0.6 beta 12/22/2011
+
+-added autocomplete search of customer name for customer bill and customer information
+-sales tax was broken
+-config class wasn't structured properly
+-added several more variables to the config class and modified the setup directions
+
+ 
+Version 1.0.5 beta 12/18/2011
+
+-fixed 'ok' button doing nothing on entering startup and IE issues when nothing is entered
+-visual improvements in context menus and main menu
+-special options could still cause issues if entering no value.  no value gets converted to zero now.
+-began creating a framework, starting with a config class.  You can now store configuration options in 
+ config/options.cfg.php, which can make retaining settings between upgrades a lot easier
+-changed dialog behavior so only one shows up on screen at once
+
+Version 1.0.4 beta 12/10/2011
+
+-fixed opening balance input event behavior if an invalid amount was given.  Pressing 
+ enter after the error message would fire the function again due to the cursor focus
+-fixed incorrect prop('type') in customer.js, though it wasn't causing an issue in FF8/IE9
+-set maxlength on customer info edit boxes, catalog edit, payments, and discount/freight
+-fixed problems with special menu when setting discount when subtotal exceeds 
+ $1000.  Had to strip the comma from the subtotal.
+-removed percentage discounts and improved regular discount to recalculate when items are 
+ added, changed, or removed
+-prevented submitting transaction if over $1 million
+-changed catalog icon
+-fixed issues in editable price in the cart
+
+Version 1.0.3.3 beta 11/26/2011
+
+-when changing the price of an item in the cart, the extended amount, 
+ and totals were not updated due to a scripting error in cart.js
+-removed the space around close.png so it would fit neatly in the top 
+ corner of the dialogs
+-added padding to open transaction list box in index.php
+
+
+Version 1.0.3.2 beta 11/25/2011
+
+-fixed missing </div> to end the catalog dialog in index.php, which 
+ was causing the "add item" dialog to only show if catalog was up
+
+
+Version 1.0.3.1 beta 11/23/2011
+
+-fixed attr()/prop() issues cause by jQuery 1.6
+
+
+Version 1.0.3 beta 11/11/2011 
+
+-Commented out "use primary wholesaler" in the catalog.  Renamed some of the related
+ variables to it and disabled it in catalog.php.  This was used to partition off the 
+ catalog into barcodes of less than 6 digits.  You can modify it as an easy way 
+ to organize database IDs if desired.
+-Added $catalog_limit to db.php to edit the max number of search results in the catalog
+-Improved catalog layout
+-Added phone number to customer info dialog and modified the database for it
+-Upgraded Jquery to 1.6.4
+-Disabled shutdown.bat, so to not accidentally shut down the computer
+-Validated index.php and fixed some of the html errors.  It was kind of a mess before, but 
+should be a lot beter now.
+-Added more indexes to some of the database tables
+
+Version 1.0.2 beta	11/05/2011 01:50 UTC
+
+-Fixed javascript error:  qty was null when items were removed from the cart
+-Visual improvements with totals and some form elements
+-Updated sql install script to create a default customer
+-customer table creation was missing from the installer script and simplified 
+ the install script
+
+
+Version 1.0.1 beta
+
+-Fixed 'on enter key' in startup dialog not working
+-Removed encrypted mysql password. No alteration to the tables.
+-Updated jquery-ui to 1.8.16 from 1.8.5
+
+
+Version 1.0 beta	10/28/2011
+
+-Initial release

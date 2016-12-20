@@ -1,0 +1,322 @@
+Setup Documentation for Primitive Point of Sale
+
+Copyright 2011-13 Jeremy N. House 
+jer.house@gmail.com
+
+Released under the GNU General Public License
+================================================================================
+
+
+This Document explains the setup process for the POS.  You will need 
+the following software to be installed:
+
+
+Web Server
+PHP 5.0 or later
+Mysql 5.0 or later (4.0 or later should work, but is untested)
+HTMLDoc (for printing invoices):  http://www.htmldoc.org/
+Any PDF Reader that can print PDFs from the command line
+Dymo Label SDK (for printing receipts)
+Zip utility.  7-zip is what the commands in the batch files are using, but you will need to install the 
+	program or an alternate
+
+
+--------------------------------------------------------------------------------
+
+Purpose:
+
+I built this system for my father's hardware store.  It is a very small business, 
+so the system is quite minimal.  It is single user based and may require a lot of
+tweaking to fit your needs.
+
+The printing features may require a lot of hacking to get working, but the basic 
+features of the POS work pretty well.  I'm hoping someone can make use of this 
+program.  I'm open to feedback and should be available 
+if you have any questions on installing or anything else.
+
+--------------------------------------------------------------------------------
+
+Features:
+
+* Product Catalog  ---  simple add/edit functionality in the GUI
+* Customer Database --- simple add/edit and customer jobs list
+* Point of Sale	    --- stores items/qty/price in cart
+						add/remove/increment item in cart
+						computes total/tax/discount/price-override
+						pause/resume transaction
+						tax exempt/resale/returns
+						pay options: cash/check/cc/account
+		
+
+* Simple accounting and statement generation
+* Printing to a Dymo label printer or regular office printer
+* Receive payments on account
+* Jquery/Jquery-ui and several open source helper apps:
+
+	* jquery.notify.min.js  -- Eric Hynds
+  	* jquery.tooltip.min.js -- J�rn Zaefferer
+    * vscontext.jquery.js   -- Intekhab A Rizvi
+
+    - Stateless design, no page loads (all ajax/jquery)
+
+
+
+Missing Features:
+
+* No easy setup:  tweaking of paths needed
+* No cash drawer functionality
+* Single user: only one terminal location should be used since 
+  there are not sufficient measures in place to ensure multiple 
+  terminals don't alter the same data
+* Limited documentation
+* Printing may require additional software
+
+--------------------------------------------------------------------------------
+
+--Normal Installation--
+
+--------------------------------------------------------------------------------
+Installing the server applications:
+
+This software is comprised of PHP scripts and HTML documents with javascript/jquery code.  Because 
+of this, you have to setup several programs:  web server, database server, PHP interpreter
+
+If you are unfamiliar with setting up MySQL, PHP, and a web server (Apache or IIS), the easiest 
+way to install the necessary programs if using Windows would be to install the WAMP package 
+from http://www.wampserver.com/ .  This will install all of the programs needed 
+rather than having to download PHP, MySQL, and Apache individually
+
+
+--------------------------------------------------------------------------------
+Setting up the Database:
+
+The database server stores all of the data for the POS.  Make sure the 'root' password is set.  
+
+Type the command: mysqladmin -u root password NEWPASSWORD
+On intial install of the program, there is no password, so when prompted just hit enter
+
+If you want to change the default user/password that the scripts will use to operate on the database, or the name
+of the database (default is pos), then you'll have to edit docs/mysql_install.sql.
+
+To setup the database structure for the POS, change to the documentation 
+directory where this help file is located and execute the command:
+
+	mysql -u root -p < mysql_install.sql
+
+	This will install the datase 'pos' and all of the tables and setup the default passwords.  These passwords 
+	are set in config/options.cfg.php.
+
+	The admin password, which is used for changing prices and catalog info is
+	set in the install script and db.php as admin314.  To change it, log into mysql, and 
+	issue the command:
+
+	UPDATE pos.users SET password='newpassword' WHERE name='admin';
+
+
+--------------------------------------------------------------------------------
+
+Using in Kiosk Mode:
+
+You most likely want the POS to run in full screen and locked down to prevent other 
+programs from running.
+
+This was intended to be run on Firefox, but I don't believe a good kiosk addon exists 
+for version > 3.0.  The latest Firefox versions have faster javascript engines than IE.  Opera 
+has a full screen mode and I think is faster than IE, but I wasn't able to get the label 
+printer working.  The best way is to install Microsoft Steady State to lock down the 
+system and use Internet Explorer, which has a kiosk mode.  There are probably better options
+ under Linux, but I haven't researched them yet.
+
+Also be sure the computer cannot be accessed through the network by unauthorized 
+computers.
+
+--------------------------------------------------------------------------------
+
+Printing:
+
+You will need to obtain HTMLDOC in order to convert the invoices into PDF format.  You need a 
+program to print PDFs from the command line.  Foxit Reader will do this, but the Commercial 
+version should be used since the free version is not for commercial use.  You will likely need to 
+change path names in print.bat and print_invoices.bat.
+
+You may also need to run the web server under an administrative account in order to access 
+the printer.  In Windows you would go to the control panel administrative tools, then 'services'
+ and change the Apache service to run under the administrator account.
+
+You will need a Dymo Label printer to print receipts.  You must install the SDK, then copy the 
+javascript framework into js/libs.  Then specify the name of the file in config/options.cfg.php
+and set $useLabelPrinter = 1.
+
+
+--------------------------------------------------------------------------------
+
+Database Backups:
+
+The system will backup the database to an FTP site during the closing procedures.  
+To run a periodic backup, set backups/periodic.bat (or periodic.vbs) to be run by the scheduler 
+at a certain interval.  On my system I also setup a replication slave where a separate install 
+of Mysql server replicates the live database onto another harddrive.  This can be done fairly
+ easily and provide a cheap, redundant backup.
+Upon extracting the files in this package, here are the files that need modified:
+
+---------------------------------------------------------------------------------
+
+To install the code from this package, it must be placed where the web server is configured to 
+serve documents.  Here are the files from this package that need to be altered:
+
+
+config/options.cfg.php -- Contains the username/password/host/database for establishing the MySQL connection
+			  Contains the sales tax rate, company information, and other options.  The POS should 
+			  run with the default values given.  You will need to change sales tax and company info 
+			  for sure.
+
+
+css/receipt_header.xml -- This is the top portion of a Dymo label file.  You don't need to bother with 
+			  this step if you're not using a Dymo printer. 
+			  If you have a logo image to put at the top, put it 
+			  in there.  You will need to use the Labeling software 
+			  if you want to make major changes to the receipt template.  The image data 
+			  goes inside <IMAGE></IMAGE> on line 32.
+						
+			An example label file is included in etc/receipt.label and a logo image at etc/logo.gif, which is 
+			already embedded at the top of receipt.label.  If you change the size of the 
+			image, then other attributes of the receipt_header.xml will probably need to 
+			be changed.
+						
+			To change the image:
+						
+			1.  Open etc/logo.gif in an image editing software.  Insert your logo in that file, but do not change 
+			the dimensions of the image.  The image must be saved as 2.21" wide by .57" tall (159 x 41 pixels), so 
+			you could use an existing image and scale it to that size.  Save the finished image as a gif, bmp, png, 
+			jpg, or tif
+						
+			2.  Load receipt.label in the label editing software, click near the top to activate the existing 
+			image.  Re-insert the new image, and save the label file.
+						
+			3.  Next view the label file in a text editor to copy the image data, between the <IMAGE></IMAGE> data.
+						
+			4.  Paste this into receipt_header.xml inside <IMAGE></IMAGE> on line 32
+
+
+
+
+print_invoice.bat & print.bat --
+				  -- Set path to HTMLDOC on line 3
+				     Set path to the file that prints the PDF on line 5
+
+shutdown.bat      -- Set the proper paths
+		     Remove "REM" from beginning to enable this file to run
+
+
+
+config/ftp.cfg.php   -- FTP authentication variables and tmp directories for the backups
+			Timeout for running the PHP script
+			Upload speed of your connection for progress bar estimation
+
+backups/quick_backup.bat  -- Set the proper paths, which is the last
+			     argument on the last line.  Set the backup 
+			     user in line 1 if different than example from instructions.
+							 
+backups/backup.bat        -- Set the proper paths, which is the last 
+				 argument on the last line.  Set mysql password and backup user 
+				 in line 1 if necessary.
+
+backups/periodic.bat	  -- Set the path to the PHP interpreter
+						    
+backups/periodic.vbs	  -- Add this file to be run by the windows scheduler at a certain interval
+				 to provide backups during the day.  This file is used in windows to 
+				 run periodic.bat in the background.  In Linux/OSX, run periodic.bat by 
+				 the cron after making it executable.
+
+
+
+--------------------------------------------------------------------------------
+
+Importing Customers:
+
+Assuming your customer data is in a spreadsheet format, you will need to create columns corresponding 
+to the fields of the database.  You will save the data as a CSV (comma delimited) file.  Order 
+the columns as done in etc/example.csv.  Most fields should be self-explanatory.  The `use_company` 
+field is used to designate whether to use the company or the `last_name/first_name` field of the 
+record.  The fields `use_company`, `credit`, `tax_exempt`, and `active` are all binary (1 or 0) fields.  
+The `credit` field designates whether to allow the customer to charge on the in-store account.  You 
+may leave any field blank except the binary fields.
+
+
+To import into the database, login to mysql:
+
+mysql -u root -p
+
+Issue the command:
+
+LOAD DATA LOCAL INFILE 'c:/wamp/www/primativepos/etc/example.csv' INTO TABLE pos.customers FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n' (company, last_name, first_name, mi, address, city, state, zip, phone, phone_ext, credit, tax_exempt, active, use_company);
+
+You can change the order of the fields in the above statement if you ordered the columns in your 
+spreadsheet differently.  You may also need to change '\r\n' to '\n' if you're using Linux/OSX.  If 
+using a tab-delimited import file, change the above ',' to '\t' to indicate tabs.  There are also other options for parsing 
+the input.
+
+--------------------------------------------------------------------------------
+
+Importing Catalog Items:
+
+This is the same procedure as for customers.  Here is an explanation of the columns:
+
+id:  primary key that is automatically incremented when a new row is added to the database table.  You don't alter this or reference it
+barcode:  numeric ID incremented on each add to the catalog from within the POS.  Used to search for or scan items.
+name:  item name
+dept_id:  not used, but may be eventually used as a catagory
+vendor_name:  manufacturer name of the item
+product_id:  UPC number which is searchable/scannable in the POS
+manufacturer_id:  manufacturer's ID for the item
+vendor_id:  not  used
+price:  item price
+qty:  quantity of item on hand.  Will be decreminted when item is sold
+override_price:  will be flagged when changing an item's price to indicate not to update it 
+				 if you do a future catalog update
+
+Example import statement:
+
+LOAD DATA LOCAL INFILE 'catalog.csv' INTO TABLE catalog FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n' (barcode, name, dept_id, vendor_name, product_id, manufacturer_id, vendor_id, price, qty, override_price);
+
+--------------------------------------------------------------------------------
+
+Known Bugs:
+
+
+You should test this system for a lengthy period of time to be 
+sure all functions work properly.
+
+-the auto_decimal function may be quirky, especially if editing using the mouse
+
+-Display needs 1280px or wider width, otherwise items may 
+ wrap over the screen.  Adjust the font size in the browser to make it fit.
+
+-If middle initials are NULL in the database, the query that populates the customer 
+list will pull up null values...not sure why.  Just make sure middle initials are 
+set to '' or that they are not null.
+--------------------------------------------------------------------------------
+
+Clip Art icons are from Open Clip Art Library:  http://www.openclipart.org/
+
+Menu icons:
+
+customers: 
+jobs:      
+billing: 
+catalog:   Ypssun
+payments:  
+shutdown:  
+
+other icons:
+      
+add:       
+freight:   
+discount:  
+close:    
+delete: 
+search: 
+labor: valessiobrito
+print: warszawianka
+view statement: jhnri4
+chart: rg1024

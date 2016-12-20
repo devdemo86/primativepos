@@ -1,0 +1,17 @@
+The different payment types from the ticket table are:
+
++---------------+
+| payment_type  |
++---------------+
+| NULL          |
+| acct          |
+| cash          |
+| cc            |
+| check         |
+| discount      |
+| payment_cash  |
+| payment_cc    |
+| payment_check |
+| svc_charge    |
+| VOID          |
++---------------+
