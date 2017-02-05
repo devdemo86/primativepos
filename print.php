@@ -29,7 +29,6 @@ require("print_pdf.php");
 
 $action = $_GET['action'];
 
-
 $ticket_id = $db->real_escape_string($_GET['ticket_id']);
 
 list($doc, $num_lines) = generate_invoice($ticket_id);
