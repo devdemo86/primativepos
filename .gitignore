@@ -1,4 +1,9 @@
 *.old
 backups/*
 etc/*
+docs/TODO.txt
+docs/update.sql
 tmp/*
+test.php
+shutdown
+css/houselmbr*
