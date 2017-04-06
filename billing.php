@@ -407,10 +407,13 @@ function view_customer_bills($customer_id, $sort_type, $sort_direction)
 		
 	}
 
-	if($row->use_company || ($row->last_name == '' && $row->company != ''))
+	if($customer_id < 1)
+		$name = ''; // 'all transactions'
+	else if($row->use_company || ($row->last_name == '' && $row->company != ''))
 		$name = $row->company;
 	else
 		$name = "$row->last_name, $row->first_name $row->mi";
+
 
 	$rv = array("name"=>$name, "tickets"=>$line);
 	header("Content-Type: application/json");
